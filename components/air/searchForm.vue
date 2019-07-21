@@ -10,7 +10,7 @@
             </span>
         </el-row>
 
-        <el-form class="search-form-content" ref="form" label-width="80px">
+        <el-form class="search-form-content" ref="form" label-width="80px" v-model="form">
             <el-form-item label="出发城市">
 
                 <!-- fetch-suggestions: 当输入框输入值时候触发搜索建议事件 -->
@@ -153,7 +153,7 @@ export default {
                     }
                 }).then(res => {
                     const {data} = res.data;
-
+    
                     // 添加一个value属性，值等于name没有市字
                     const newData = data.map(v => {
                         return {
@@ -161,7 +161,8 @@ export default {
                             value: v.name.replace("市", ""), 
                         }
                     });
-
+                    
+                    
                     // 默认选中第一个
                     resolve(newData);
 
