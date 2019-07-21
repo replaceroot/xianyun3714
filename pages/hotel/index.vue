@@ -13,14 +13,20 @@
     <BookHotel/>
     </el-row>
     
+    <el-row>
+      <!-- 酒店地图组件 -->
+      <BookMap/>
+    </el-row>
   </section>
 </template>
 
 <script>
 import BookHotel from "@/components/hotel/bookHotel"
+import BookMap from "@/components/hotel/bookMap"
 export default {
   components:{
-    BookHotel
+    BookHotel,
+    BookMap
   }
 }
 </script>
