@@ -82,7 +82,7 @@
           </el-select>
         </el-row>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="6" class="last">
         <el-row>酒店品牌</el-row>
         <el-row>
           <el-select
@@ -214,6 +214,9 @@ export default {
       .hotelPrice {
         text-align: right;
       }
+    }
+    .last{
+        border:no 
     }
     .hotellevel {
       .hotelLeveList {
