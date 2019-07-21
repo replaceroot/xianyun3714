@@ -10,15 +10,13 @@
     <!-- 文章开始 -->
     <div class="detail-main">
       <!-- 标题 -->
-      <h1>塞班贵？一定是你的打开方式不对！6000块玩转塞班</h1>
+      <h1>{{postlist.title}}</h1>
       <hr />
       <!-- 创建时间、 阅读量-->
       <div class="created">攻略：2019-05-22 10:57 阅读：2787</div>
       <!-- 文章内容-->
-      <div class="content">
-        <div
-          class="jianyao"
-        >大家对塞班岛总存在着这样的误解，知道它是美属地盘，就理所当然地觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么玩？关于旅行这件事，我们要让钱花得更有道理，收下这份攻略，带你6000块花式玩转塞班。</div>
+      <!-- <div class="content">
+        <div class="jianyao" ></div>
         <img
           src="https://n3-q.mafengwo.net/s10/M00/E8/E4/wKgBZ1octoCABhgLAAafahORRLs91.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
           alt
@@ -39,100 +37,57 @@
             在酒店上，旅途中我们呆在酒店的时间远比在外游玩的时间少，酒店干净整洁基本就能满足我们休息的需求，塞班不是个享受酒店的地方而且还真不能跟国内星级酒店等位比较，所以不建议大家花过多的钱在塞班的酒店体验上。
             怎样在机票酒店上获得最高性价比的体验？ 直飞塞班的航班一般和酒店一起打包成机票+酒店套餐，价格要比单定机票、酒店要更加便捷实惠，往往3千多就能把机票和酒店一键搞定。
           </p>
-          <!-- 点赞-->
-    
-          <div class="el-row">
-              <div class="ctrl-item">
-                      <i class="iconfont iconpinglun" data-v-741ea8d8=""></i>
-                      <p>评论(100)</p>
-              </div>
-                 <div class="ctrl-item">
-                      <i class="iconfont iconpinglun" data-v-741ea8d8=""></i>
-                      <p>收藏</p>
-              </div>
-                 <div class="ctrl-item">
-                      <i class="iconfont iconpinglun" data-v-741ea8d8=""></i>
-                      <p>分享</p>
-              </div>
-                 <div class="ctrl-item">
-                      <i class="iconfont iconpinglun" data-v-741ea8d8=""></i>
-                      <p>点赞(100)</p>
-              </div>
-          </div>
-
-<!--评论模块 -->
-<div class="say">
-    <h4>评论</h4>
-    <el-input
-  type="textarea"
-  :rows="2"
-  placeholder="请输入内容"
-  v-model="textarea">
-</el-input>
-
-<el-upload
-  class="avatar-uploader"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :show-file-list="false"
-  :on-success="handleAvatarSuccess"
-  :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-</el-upload>
-</div>
 
         </div>
-      </div>
+      </div> -->
+      <div class="postcontent" v-html="postlist.content"/>
+      <!-- <p v-html='answer'></p> -->
+      
       <!-- 文章结束 -->
     </div>
   </div>
 </template>
 <script>
 export default {
-     data() {
-    return {
-      textarea: ''
+  data(){
+    return{
+  postlist:{},
     }
+  },
+ props: {
+        data: {
+              
+        }
+    },
+  mounted(){
+      this.$axios({
+          url:"/posts",
+      }).then(res=>{
+          console.log(res.data.data[0]);
+         this.postlist=res.data.data[0]
+      })
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="less" >
 .postdetail {
   padding-top: 30px;
   margin: 0 auto;
   width: 700px;
 }
-img {
-  width: 100%;
+.postcontent{
+    max-width: 700px!important;
+}
+.postcontent img {
+  // width: 100%;
+  max-width: 700px!important;
   margin: 10px 0;
 }
 .detail-main .created{
     text-align: right;
     padding: 20px 0;
 }
- .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+ 
 </style>
 
 
