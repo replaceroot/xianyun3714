@@ -12,6 +12,7 @@
       <!-- 酒店预订选择组件 -->
     <BookHotel/>
     </el-row>
+    
   </section>
 </template>
 
