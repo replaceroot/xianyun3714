@@ -158,6 +158,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .hotel-map {
+  min-height: 260px;
+  margin-bottom: 20px;
   .content {
     > div {
       margin-bottom: 20px;

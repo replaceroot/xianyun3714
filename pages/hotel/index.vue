@@ -10,23 +10,29 @@
       justify="space-between"
     >
       <!-- 酒店预订选择组件 -->
-    <BookHotel/>
+      <BookHotel />
     </el-row>
-    
+
     <el-row>
       <!-- 酒店地图组件 -->
-      <BookMap/>
+      <HotelMap />
+    </el-row>
+    <el-row>
+      <!-- 酒店筛选栏组件 -->
+      <HotelFilter />
     </el-row>
   </section>
 </template>
 
 <script>
 import BookHotel from "@/components/hotel/bookHotel"
-import BookMap from "@/components/hotel/bookMap"
+import HotelMap from "@/components/hotel/hotelMap"
+import HotelFilter from "@/components/hotel/hotelFilter"
 export default {
-  components:{
+  components: {
     BookHotel,
-    BookMap
+    HotelMap,
+    HotelFilter
   }
 }
 </script>
