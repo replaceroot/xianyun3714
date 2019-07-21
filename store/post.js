@@ -1,7 +1,9 @@
 export const state = () => ({
-    list: [1,2,3]
+    postlist: []
 })
 
 export const mutations = {
-    setData(state,data){}
+    setPostData(state,data){
+        state.postlist=data
+    }
 }
