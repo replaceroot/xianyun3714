@@ -76,7 +76,7 @@
             </el-table-column>
             <el-table-column>
               <template slot-scope="scope">
-                <span> ￥ {{ scope.row.price}} 起 ></span>
+               <nuxt-link to="javascript:"> <span> ￥ {{ scope.row.price}} 起 ></span></nuxt-link>
               </template>
             </el-table-column>
           </el-table>

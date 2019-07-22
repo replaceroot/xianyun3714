@@ -14,7 +14,7 @@
           <el-col
             :span="12"
             class="hotelPrice"
-          >0-XXXX</el-col>
+          >0-{{selectHotelPrice}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -35,10 +35,10 @@
             placeholder="不限"
           >
             <el-option
-              v-for="item in hotelLevelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index) in hotelLevelList"
+              :key="index"
+              :label="item.name"
+              :value="item.level"
             >
             </el-option>
           </el-select>
@@ -54,10 +54,10 @@
             placeholder="不限"
           >
             <el-option
-              v-for="item in hotelTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index) in hotelTypeList"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
             >
             </el-option>
           </el-select>
@@ -73,16 +73,19 @@
             placeholder="不限"
           >
             <el-option
-              v-for="item in hoteLassetList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index) in hoteLassetList"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
             >
             </el-option>
           </el-select>
         </el-row>
       </el-col>
-      <el-col :span="6" class="last">
+      <el-col
+        :span="6"
+        class="last"
+      >
         <el-row>酒店品牌</el-row>
         <el-row>
           <el-select
@@ -92,10 +95,10 @@
             placeholder="不限"
           >
             <el-option
-              v-for="item in hotelBrandList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index) in hotelBrandList"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
             >
             </el-option>
           </el-select>
@@ -108,7 +111,8 @@
 export default {
   data() {
     return {
-      priceRange: 50,    // 酒店价格
+      selectHotelPrice: 4000,  // 选择酒店的价格    
+      priceRange : 100,
       hotellevel: [],     // 酒店等级
       hotelLevelList: [     // 下拉框 酒店等级
         {
@@ -129,75 +133,37 @@ export default {
         }
       ],
       hoteltype: [],        // 酒店类型
-      hotelTypeList: [      // 下拉框 酒店类型
-        {
-          value: '1',
-          label: '经济型'
-        }, {
-          value: '2',
-          label: '舒适型'
-        }, {
-          value: '3',
-          label: '高档型'
-        }, {
-          value: '4',
-          label: '豪华型'
-        }, {
-          value: '5',
-          label: '度假村'
-        },
-        {
-          value: '6',
-          label: '公寓式酒店'
-        },
+      hotelTypeList: [      // 下拉框 酒店类型      
       ],
       hotelasset: [],        // 酒店设施
       hoteLassetList: [      // 下拉框 酒店设施 
-        {
-          value: '1',
-          label: 'wifi'
-        }, {
-          value: '2',
-          label: '热水壶'
-        }, {
-          value: '3',
-          label: '吹风机'
-        }, {
-          value: '4',
-          label: '外币兑换服务'
-        }, {
-          value: '5',
-          label: '洗衣服务'
-        },
-        {
-          value: '6',
-          label: '电梯'
-        },
       ],
       hotelbrand: [],        // 酒店品牌
       hotelBrandList: [       // 下拉框酒店品牌
-        {
-          value: '1',
-          label: '7天连锁'
-        }, {
-          value: '2',
-          label: '汉庭'
-        }, {
-          value: '3',
-          label: '如家'
-        }, {
-          value: '4',
-          label: '格林豪泰'
-        },
       ]
     }
   },
   methods: {
     // 拖动滑块触发
     priceTooltip(val) {
-      // console.log(val);
-
+      //   console.log(val);
+      this.selectHotelPrice = val / 100 * 4000
+      return val / 100 * 4000
+     
+      console.log(this.selectHotelPrice);
     }
+  },
+  mounted() {
+    this.$axios({
+      url: '/hotels/options'
+    }).then(res => {
+      const { data } = res.data
+      //   console.log(data);         
+      this.hoteLassetList = data.assets
+      this.hotelBrandList = data.brands
+      this.hotelLevelList = data.levels
+      this.hotelTypeList = data.types
+    })
   }
 }
 </script>
@@ -215,8 +181,8 @@ export default {
         text-align: right;
       }
     }
-    .last{
-        border:no 
+    .last {
+      border: no;
     }
     .hotellevel {
       .hotelLeveList {
