@@ -127,7 +127,8 @@ export default {
 
   data() {
     return {
-      iconTag: true,
+      iconTag: true,  // 点击标签扩展
+      hotelLocation: {}    // 酒店位置信息
     }
   },
   computed: {
@@ -138,10 +139,31 @@ export default {
     // 城市区域数量
     AreaNum() {
       return this.$store.state.hotel.cityAreaNum
+    },
+    // 获取城市酒店的信息
+    CityhotelInfo() {
+      return this.$store.state.hotel.hotelInfo
     }
 
   },
   methods: {
+    init() {
+      // 生成地图hotelMap是显示地图的div的id
+      var map = new AMap.Map('hotelMap', {
+        zoom: 8,//放大级别
+        center: [118.8718107, 31.32846821],//中心点坐标，经纬度
+        viewMode: '3D'//使用3D视图
+      });
+
+      // 创建一个 Marker 实例：
+      this.CityhotelInfo.forEach(v => {
+        map.add(new AMap.Marker({
+          //content: "<div style='width:20px; height:20px; background:red;'>1</div>",
+          position: new AMap.LngLat(v.location.longitude, v.location.latitude),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+          title: '北京'
+        }));
+      })
+    },
     // 点击扩展区域
     handleExtation() {
       // 获取icon 标签
@@ -161,25 +183,10 @@ export default {
     }
   },
   mounted() {
+    // 设置定时器 等待酒店信息全部获取后执行，遍历酒店信息获取酒店location
 
     // 页面加载之后执行
-    window.onLoad = function () {
-      // 生成地图hotelMap是显示地图的div的id
-      var map = new AMap.Map('hotelMap', {
-        zoom: 11,//放大级别
-        center: [118.8718107, 31.32846821],//中心点坐标，经纬度
-        viewMode: '3D'//使用3D视图
-      });
-
-      // 创建一个 Marker 实例：
-      var marker = new AMap.Marker({
-        //content: "<div style='width:20px; height:20px; background:red;'>1</div>",
-        position: new AMap.LngLat(118.8718107, 31.32846821),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-        title: '北京'
-      });
-
-      map.add(marker);
-    }
+    window.onLoad = this.init
 
     // 地图的链接
     var key = "	9b7c3f319b857206392cb57315b87209"
