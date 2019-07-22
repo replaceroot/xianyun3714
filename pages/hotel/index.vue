@@ -11,7 +11,7 @@
 
     <el-row>
       <!-- 酒店地图组件 -->
-      <HotelMap :data="$store.state.hotel.hotelInfo" />
+      <HotelMap />
     </el-row>
 
     <el-row>
@@ -22,7 +22,7 @@
     <el-row>
       <!-- 酒店列表信息 -->
       <el-row>
-        <HotelList/>
+        <HotelList />
       </el-row>
     </el-row>
   </section>

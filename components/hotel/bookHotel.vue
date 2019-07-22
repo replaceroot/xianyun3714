@@ -88,6 +88,7 @@ export default {
     // value 是选中的值，cb是回调函数，接收要展示的列表
     querySearchHotel(value, cb) {
       this.querySearchCity(value).then(arr => {
+        
         if (arr.length > 0) {
           // 设置到达城市的第一个为默认值
           this.form.city = arr[0].id
@@ -161,7 +162,7 @@ export default {
       }).then(res => {
         // console.log(res);
         const { data } = res
-        // console.log(data.data);
+        console.log(data);
 
         // 将酒店的信息存储在store
         this.$store.commit("hotel/setHotelInfo", data.data)

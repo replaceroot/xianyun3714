@@ -124,28 +124,27 @@
 </template>
 <script>
 export default {
-  props: {
-    data: {
-      type: Array,
-      default: []
-    }
-  },
+
   data() {
     return {
       iconTag: true
     }
   },
-
+  computed: {
+    data() {
+      return this.$store.state.hotel.hotelInfo
+    }
+  },
   methods: {
     // 点击扩展区域
     handleExtation() {
       const iTag = document.querySelector(".areaNum .el-icon-d-arrow-right")
       if (this.iconTag) {
-          iTag.style.transform= "rotate(270deg)";
-          this.iconTag = false
-      }else{
-         iTag.style.transform= "rotate(90deg)";
-          this.iconTag = true
+        iTag.style.transform = "rotate(270deg)";
+        this.iconTag = false
+      } else {
+        iTag.style.transform = "rotate(90deg)";
+        this.iconTag = true
       }
 
     }
