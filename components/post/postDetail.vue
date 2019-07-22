@@ -63,7 +63,7 @@ export default {
       this.$axios({
           url:"/posts",
       }).then(res=>{
-          console.log(res.data.data[0]);
+          // console.log(res.data.data[0]);
          this.postlist=res.data.data[0]
       })
   }
