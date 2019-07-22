@@ -17,16 +17,16 @@
                 <span class="both">全部</span>
                 <nuxt-link
                   to="javascript:"
-                  v-for="(item,index) in data"
+                  v-for="(item,index) in cityAreaInfo.scenics"
                   :key="index"
                   class="area"
-                >{{item.area}}</nuxt-link>
+                >{{item.name}}</nuxt-link>
 
               </div>
               <span
                 class="areaNum"
                 @click="handleExtation"
-              > <i class="el-icon-d-arrow-right"></i>等{{data.length}}个区域</span>
+              > <i class="el-icon-d-arrow-right"></i>等{{AreaNum}}个区域</span>
 
             </el-col>
           </el-row>
@@ -127,13 +127,19 @@ export default {
 
   data() {
     return {
-      iconTag: true
+      iconTag: true,
     }
   },
   computed: {
-    data() {
-      return this.$store.state.hotel.hotelInfo
+    // 城市区域信息
+    cityAreaInfo() {
+        return this.$store.state.hotel.cityArea
+    },
+    // 城市区域数量
+    AreaNum(){
+      return  this.$store.state.hotel.cityAreaNum
     }
+
   },
   methods: {
     // 点击扩展区域

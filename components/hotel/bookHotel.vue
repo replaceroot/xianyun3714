@@ -162,7 +162,7 @@ export default {
       }).then(res => {
         // console.log(res);
         const { data } = res
-        console.log(data);
+        // console.log(data);
 
         // 将酒店的信息存储在store
         this.$store.commit("hotel/setHotelInfo", data.data)
@@ -189,6 +189,22 @@ export default {
   mounted() {
     // 获取城市酒店信息
     this.getHotelInfo()
+    
+    // 获取城市信息
+    this.$axios({
+      url:'/cities',
+      params:{
+        name:this.cityName
+      }
+    }).then(res=>{
+      // console.log(res);    
+      // 将城市的区域信息储存在store中
+      const {data} = res.data 
+      this.$store.commit('hotel/setCityArea',data[0])
+      // 将区域数量存储到store
+      this.$store.commit('hotel/setCityAreaNum',data[0].scenics.length)
+      
+    })
 
   }
 }
