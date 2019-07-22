@@ -76,7 +76,7 @@ export default {
       form: {
         city: 74,       //城市id
         enterTime: '',   //入店时间
-        leftTime:''      //离开时间
+        leftTime: ''      //离开时间
       },
       person: '',    // 人数
       destinationForm: [],   // 目的地表单
@@ -132,36 +132,63 @@ export default {
       // console.log(item);
       this.form.city = item.id
       this.cityName = item.name
+      // 选中城市后，跳转到该城市
+      this.$router.push({
+        path: '/hotel?city=' + this.form.city
+      })
     },
     // 入住时间/离开时间
-    handelDatePicker(val){
+    handelDatePicker(val) {
       // console.log(val);     
       this.form.enterTime = moment(val[0]).format("YYYY-MM-DD")
       this.form.leftTime = moment(val[1]).format("YYYY-MM-DD")
       // console.log( this.form.enterTime,this.form.leftTime); 
-      
+
     },
     // 查看价格
-    handleSearchPrice() { 
-      console.log(11);
-      
+    handleSearchPrice() {
+      // console.log(11);
+
+    },
+    // 封装获取城市数据
+    getHotelInfo() {
+      // 获取城市酒店信息
+      this.$axios({
+        url: '/hotels',
+        params: {
+          city: this.form.city
+        }
+      }).then(res => {
+        // console.log(res);
+        const { data } = res
+        // console.log(data.data);
+
+        // 将酒店的信息存储在store
+        this.$store.commit("hotel/setHotelInfo", data.data)
+        // 自动跳转到 南京页面
+        this.$router.push({
+          path: '/hotel?city=' + this.form.city
+        })
+        // console.log(this.$route.query.city);
+        // 如果url地址中没有city参数，默认跳转到南京id 74
+        if (this.$route.query.city === 74) {
+          this.$router.push({
+            path: '/hotel?city=' + this.form.city
+          })
+        }
+
+      })
     }
   },
-  mounted(){
+  watch: {
+    $route() {
+      this.getHotelInfo()
+    }
+  },
+  mounted() {
     // 获取城市酒店信息
-    this.$axios({
-      url:'/hotels',
-      params:{
-        city:this.form.city
-      }
-    }).then(res=>{
-      // console.log(res);
-      // 自动跳转到 南京页面
-    this.$router.push({
-      path:'/hotel?city='+this.form.city
-    })
-    })
-    
+    this.getHotelInfo()
+
   }
 }
 </script>
