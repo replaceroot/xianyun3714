@@ -13,7 +13,7 @@
           >
             <el-col :span="3">区域:</el-col>
             <el-col :span="21">
-              <div class="road">
+              <div class="road hidden-all">
                 <span class="both">全部</span>
                 <nuxt-link
                   to="javascript:"
@@ -71,7 +71,7 @@
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
-                      ￥XXX
+                      ￥332
                     </span>
                   </el-tooltip>
 
@@ -87,7 +87,7 @@
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
-                      ￥XXX
+                      ￥521
                     </span>
                   </el-tooltip>
                 </el-col>
@@ -102,7 +102,7 @@
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
-                      ￥XXX
+                      ￥768
                     </span>
                   </el-tooltip>
                 </el-col>
@@ -133,23 +133,28 @@ export default {
   computed: {
     // 城市区域信息
     cityAreaInfo() {
-        return this.$store.state.hotel.cityArea
+      return this.$store.state.hotel.cityArea
     },
     // 城市区域数量
-    AreaNum(){
-      return  this.$store.state.hotel.cityAreaNum
+    AreaNum() {
+      return this.$store.state.hotel.cityAreaNum
     }
 
   },
   methods: {
     // 点击扩展区域
     handleExtation() {
+      // 获取icon 标签
       const iTag = document.querySelector(".areaNum .el-icon-d-arrow-right")
+      // 获取显示区域的box
+      const roadBox = document.querySelector(".road")
       if (this.iconTag) {
         iTag.style.transform = "rotate(270deg)";
+        roadBox.classList.remove('hidden-all')
         this.iconTag = false
       } else {
         iTag.style.transform = "rotate(90deg)";
+        roadBox.classList.add('hidden-all')
         this.iconTag = true
       }
 
@@ -237,5 +242,9 @@ export default {
     transform: rotate(90deg);
     color: #f90;
   }
+}
+.hidden-all {
+  max-height: 3em;
+  overflow: hidden;
 }
 </style>
