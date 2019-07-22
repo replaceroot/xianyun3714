@@ -154,13 +154,22 @@ export default {
         center: [118.8718107, 31.32846821],//中心点坐标，经纬度
         viewMode: '3D'//使用3D视图
       });
+      console.log(this.CityhotelInfo);
 
       // 创建一个 Marker 实例：
-      this.CityhotelInfo.forEach(v => {
+      this.CityhotelInfo.forEach((v, index) => {
         map.add(new AMap.Marker({
-          //content: "<div style='width:20px; height:20px; background:red;'>1</div>",
+          content: `<div style='
+           display: inline-block;
+           width: 22px;
+           height: 36px;
+           background-image: url(https://webapi.amap.com/theme/v1.3/markers/b/mark_b.png);
+           background-size: 22px 36px;
+           text-align: center;
+           line-height: 24px;
+           color: #fff;'>${index}</div>`,
           position: new AMap.LngLat(v.location.longitude, v.location.latitude),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-          title: '北京'
+          title:`${v.name}`
         }));
       })
     },
