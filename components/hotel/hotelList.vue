@@ -4,6 +4,8 @@
       <el-row
         type="flex"
         justify="space-between"
+        v-for="(item,index) in data"
+        :key="index"
       >
         <el-col
           :span="8"
@@ -11,7 +13,7 @@
         >
           <nuxt-link to="javascript:">
             <img
-              src="http://qcloud.dpfile.com/pc/wQ2ejOSmhB4OoEq1LYPHp_2RhNciyW026YiQFr_EEZsQrI_ZB6abZPwgKDOmI03U3dWYFEM5hoslgWXTJDjSPA.jpg"
+              :src=item.photos
               alt=""
             >
           </nuxt-link>
@@ -22,23 +24,23 @@
         >
           <el-row>
             <h4>
-              <nuxt-link to="javascript:">好莱格商务宾馆</nuxt-link>
+              <nuxt-link to="javascript:">{{item.name}}</nuxt-link>
             </h4>
 
           </el-row>
           <el-row class="hotelInfoSencond">
-            <span>hao lai ge shang wu hotel</span>
+            <span>{{item.alias}}</span>
             <span class="iconfont">
               <i class="iconfont iconhuangguan"></i>
               <i class="iconfont iconhuangguan"></i>
               <i class="iconfont iconhuangguan"></i>
             </span>
-            <span>经济型</span>
+            <span>{{item.hoteltype.name}}</span>
           </el-row>
           <el-row class="hotelInfothird">
             <el-col :span="10">
               <el-rate
-                v-model="grade"
+                v-model="item.stars"
                 disabled
                 show-score
                 text-color="#ff9900"
@@ -50,17 +52,17 @@
               :span="7"
               class="comment"
             >
-              <span>XX</span>条评价
+              <span>{{item.all_remarks}}</span>条评价
             </el-col>
             <el-col
               :span="7"
               class="post"
             >
-              <span>XX</span>条游记
+              <span>{{travelNotes}}</span>条游记
             </el-col>
           </el-row>
           <el-row class="hotelInfoLast">
-            <i class="iconfont iconlocation"></i>位于: 高淳县淳溪镇镇兴路118号(高淳县委党校对面)
+            <i class="iconfont iconlocation"></i>位于: {{item.address}}
           </el-row>
         </el-col>
         <el-col
@@ -68,7 +70,7 @@
           class="hotelPrice"
         >
           <el-table
-            :data="tableData"
+            :data="item.products"
             style="width: 100%"
             :show-header='false'
           >
@@ -89,14 +91,15 @@
 export default {
   data() {
     return {
-      grade: 3.5,    // 评分
-      tableData: [
-        { name: "携程", price: 113, bestType: "高级大床房A" },
-        { name: "艺龙", price: 56, bestType: "高级大床房A" },
-        { name: "艺龙", price: 56, bestType: "高级大床房A" }
-      ]
+      grade: 0,    // 评分
+      travelNotes:Math.floor(Math.random()*100) // 游记数量
     }
-  }
+  },
+  computed: {
+    data() {
+      return this.$store.state.hotel.hotelInfo
+    }
+  },
 }
 </script>
 <style lang="less" scoped>

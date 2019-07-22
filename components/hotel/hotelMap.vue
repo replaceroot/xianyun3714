@@ -15,15 +15,19 @@
             <el-col :span="21">
               <div class="road">
                 <span class="both">全部</span>
-                <nuxt-link to="javascript:">XXX路</nuxt-link>
-                <nuxt-link to="javascript:">南京路</nuxt-link>
-                <nuxt-link to="javascript:">北京路</nuxt-link>
-                <nuxt-link to="javascript:">上海路</nuxt-link>
+                <nuxt-link
+                  to="javascript:"
+                  v-for="(item,index) in data"
+                  :key="index"
+                  class="area"
+                >{{item.area}}</nuxt-link>
+
               </div>
-              <i
-                class="el-icon-caret-bottom"
+              <span
+                class="areaNum"
                 @click="handleExtation"
-              >等XX个区域</i>
+              > <i class="el-icon-d-arrow-right"></i>等{{data.length}}个区域</span>
+
             </el-col>
           </el-row>
           <el-row
@@ -54,6 +58,7 @@
               <el-row
                 type="flex"
                 justify="space-between"
+                class="iconhuangguan"
               >
                 <el-col :span="6">
                   <el-tooltip
@@ -63,9 +68,9 @@
                     placement="bottom-start"
                   >
                     <span>
-                      <i class="el-icon-star-off"></i>
-                      <i class="el-icon-star-off"></i>
-                      <i class="el-icon-star-off"></i>
+                      <i class="iconfont iconhuangguan"></i>
+                      <i class="iconfont iconhuangguan"></i>
+                      <i class="iconfont iconhuangguan"></i>
                       ￥XXX
                     </span>
                   </el-tooltip>
@@ -79,9 +84,9 @@
                     placement="bottom-start"
                   >
                     <span>
-                      <i class="el-icon-star-off"></i>
-                      <i class="el-icon-star-off"></i>
-                      <i class="el-icon-star-off"></i>
+                      <i class="iconfont iconhuangguan"></i>
+                      <i class="iconfont iconhuangguan"></i>
+                      <i class="iconfont iconhuangguan"></i>
                       ￥XXX
                     </span>
                   </el-tooltip>
@@ -94,9 +99,9 @@
                     placement="bottom-start"
                   >
                     <span>
-                      <i class="el-icon-star-off"></i>
-                      <i class="el-icon-star-off"></i>
-                      <i class="el-icon-star-off"></i>
+                      <i class="iconfont iconhuangguan"></i>
+                      <i class="iconfont iconhuangguan"></i>
+                      <i class="iconfont iconhuangguan"></i>
                       ￥XXX
                     </span>
                   </el-tooltip>
@@ -119,13 +124,33 @@
 </template>
 <script>
 export default {
+
+  data() {
+    return {
+      iconTag: true
+    }
+  },
+  computed: {
+    data() {
+      return this.$store.state.hotel.hotelInfo
+    }
+  },
   methods: {
     // 点击扩展区域
     handleExtation() {
+      const iTag = document.querySelector(".areaNum .el-icon-d-arrow-right")
+      if (this.iconTag) {
+        iTag.style.transform = "rotate(270deg)";
+        this.iconTag = false
+      } else {
+        iTag.style.transform = "rotate(90deg)";
+        this.iconTag = true
+      }
 
     }
   },
   mounted() {
+
     // 页面加载之后执行
     window.onLoad = function () {
       // 生成地图hotelMap是显示地图的div的id
@@ -177,7 +202,11 @@ export default {
     }
   }
 }
-
+.iconhuangguan {
+  i {
+    color: #f90;
+  }
+}
 #question-mark {
   background-color: #ccc;
   color: #fff;
@@ -186,5 +215,21 @@ export default {
   height: 1.2em;
   text-align: center;
   border-radius: 100%;
+}
+.road {
+  .area {
+    margin-right: 1em;
+    padding: 0 2px;
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+.areaNum {
+  cursor: pointer;
+  .el-icon-d-arrow-right {
+    transform: rotate(90deg);
+    color: #f90;
+  }
 }
 </style>
