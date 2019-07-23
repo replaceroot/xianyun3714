@@ -25,32 +25,43 @@
       <!--评论模块 -->
       <div class="say">
         <h4>评论</h4>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="sayTextArea" @change="createSay"></el-input>
-        <el-button type="primary"  plain>提交</el-button>
-     <!-- <div @click="createSay">提交</div> -->
-   <!-- 图片上传 -->
-  <el-upload
-  class="avatar-uploader"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :show-file-list="false"
-  :on-success="handleAvatarSuccess"
-  :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-</el-upload>
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          ref="sayTextArea"
+          v-model="sayTextArea"
+        ></el-input>
+        <el-button type="primary" @click="createSay(sayTextArea)" plain>提交</el-button>
+        <!-- <div @click="createSay">提交</div> -->
+        <!-- 图片上传 -->
+        <!-- 'POST', 'http://127.0.0.1:1337/upload' -->
+        <el-upload
+          class="avatar-uploader "
+          action="#"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          ref="pics"
+          :model="pics"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </div>
       <!-- 评论显示区 -->
       <el-card class="box-card">
-     <div v-for="(item,index) in dislist" :key="index" class="text item">
-    {{item.content }}
-    <div v-if="item.follow">{{item.follow.content}}</div>
-  </div>
-</el-card>
-      </div>
+        <div ref="dislist" v-for="(item,index) in dislist" :key="index" class="text item">
+          {{item.content }}
+          <div v-if="item.follow">{{item.follow.content}}</div>
+          <div v-if="true" style="width:100px;height:100px;border:1px solid red"><img :src="item.pics[0]" alt=""/></div>
+        </div>
+      </el-card>
     </div>
+  </div>
 </template>
 <script>
-import { log } from 'util';
+// import { log } from 'util';
+// import { log } from 'util';
 export default {
   data() {
     return {
@@ -62,49 +73,69 @@ export default {
       newSay:"",
     };
   },
-    mounted(){
-      this.$axios({
-        url:"/posts/comments",
-        method:"GET"
-      }).then(res=>{
-        // console.log(res.data.data); 
-        // console.log(res.data.data[0].pics); 评论照片地址[]
-        // console.log(res.data.data[0].content) 评论
-      // console.log(res.data.data[0].follow.content) 回复
-      this.dislist=res.data.data 
-  
-      })
+ mounted(){
+   //渲染旅游攻略评论
+ this.getSay()
     },
     methods: {
-      createSay(dislist){
-        console.log(111);
-        console.log(dislist);
-       const newSay= this.sayTextArea
-        // console.log(newSay);
-        // dislist.push(newSay)
+        getSay(){
+        this.$axios({
+        url:"/posts/comments",
+        method:"GET",
+      }).then(res=>{
+        console.log(res.data.data[0].pics,2233); //评论照片地址[]
+        // console.log(res.data.data[0].content) 评论
+      // console.log(res.data.data[0].follow.content) 回复
+      this.dislist=res.data.data;
+     
+      })
+        },
+        //新增旅游攻略评论
+        createSay(sayTextArea){
+          console.log(sayTextArea);
+            // 数据的拼接
+            const data = {
+              content:sayTextArea,
+                score: this.score,
+                loacation: this.loacation,
+                pics: this.pics,
+                post: 4,
+            }
+     this.$axios({
+        url:"/comments",
+        method:"POST",
+        data,
+        //  添加授权的头信息
+        headers: {
+                    // "Content-Type":"",
+                    // 下面请求头信息不是通用的，针对当前的项目的（基于JWT token标准）
+                    Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+                }
+      }).then(res=>{
+
+        console.log(res,123); 
+        console.log(res.config.data); 
+         this.getSay()
+       
+      })
+        sayTextArea=""
+      },
+      //上传图片
+      handleAvatarSuccess(res, file){
         
-
-      },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-        // console.log(this);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.pics=this.imageUrl
+      //  console.log(66666666,this.pics);
+      const data={
+        pics:this.pics
       }
+
+      },
     }
 };
 </script>
 <style lang="less" scoped>
+
 .mian {
   padding-top: 30px;
   margin: 0 auto;
@@ -141,27 +172,27 @@ export default {
   text-align: center;
   margin: 40px 20px;
 }
- .text {
-    font-size: 14px;
-  }
+.text {
+  font-size: 14px;
+}
 
-  .item {
-    margin-bottom: 18px;
-    border-bottom: 1px dashed #eee;
-  }
+.item {
+  margin-bottom: 18px;
+  border-bottom: 1px dashed #eee;
+}
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
 
-  .box-card {
-    width: 700px;
-  }
+.box-card {
+  width: 700px;
+}
 </style>
 
 
