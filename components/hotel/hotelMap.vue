@@ -13,20 +13,20 @@
           >
             <el-col :span="3">区域:</el-col>
             <el-col :span="21">
-              <div class="road">
+              <div class="road hidden-all">
                 <span class="both">全部</span>
                 <nuxt-link
                   to="javascript:"
-                  v-for="(item,index) in data"
+                  v-for="(item,index) in cityAreaInfo.scenics"
                   :key="index"
                   class="area"
-                >{{item.area}}</nuxt-link>
+                >{{item.name}}</nuxt-link>
 
               </div>
               <span
                 class="areaNum"
                 @click="handleExtation"
-              > <i class="el-icon-d-arrow-right"></i>等{{data.length}}个区域</span>
+              > <i class="el-icon-d-arrow-right"></i>等{{AreaNum}}个区域</span>
 
             </el-col>
           </el-row>
@@ -71,7 +71,7 @@
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
-                      ￥XXX
+                      ￥332
                     </span>
                   </el-tooltip>
 
@@ -87,7 +87,7 @@
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
-                      ￥XXX
+                      ￥521
                     </span>
                   </el-tooltip>
                 </el-col>
@@ -102,7 +102,7 @@
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
                       <i class="iconfont iconhuangguan"></i>
-                      ￥XXX
+                      ￥768
                     </span>
                   </el-tooltip>
                 </el-col>
@@ -127,48 +127,75 @@ export default {
 
   data() {
     return {
-      iconTag: true
+      iconTag: true,  // 点击标签扩展
+      hotelLocation: {}    // 酒店位置信息
     }
   },
   computed: {
-    data() {
+    // 城市区域信息
+    cityAreaInfo() {
+      return this.$store.state.hotel.cityArea
+    },
+    // 城市区域数量
+    AreaNum() {
+      return this.$store.state.hotel.cityAreaNum
+    },
+    // 获取城市酒店的信息
+    CityhotelInfo() {
       return this.$store.state.hotel.hotelInfo
     }
+
   },
   methods: {
+    init() {
+      // 生成地图hotelMap是显示地图的div的id
+      var map = new AMap.Map('hotelMap', {
+        zoom: 8,//放大级别
+        center: [118.8718107, 31.32846821],//中心点坐标，经纬度
+        viewMode: '3D'//使用3D视图
+      });
+      console.log(this.CityhotelInfo);
+
+      // 创建一个 Marker 实例：
+      this.CityhotelInfo.forEach((v, index) => {
+        map.add(new AMap.Marker({
+          content: `<div style='
+           display: inline-block;
+           width: 22px;
+           height: 36px;
+           background-image: url(https://webapi.amap.com/theme/v1.3/markers/b/mark_b.png);
+           background-size: 22px 36px;
+           text-align: center;
+           line-height: 24px;
+           color: #fff;'>${index}</div>`,
+          position: new AMap.LngLat(v.location.longitude, v.location.latitude),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+          title:`${v.name}`
+        }));
+      })
+    },
     // 点击扩展区域
     handleExtation() {
+      // 获取icon 标签
       const iTag = document.querySelector(".areaNum .el-icon-d-arrow-right")
+      // 获取显示区域的box
+      const roadBox = document.querySelector(".road")
       if (this.iconTag) {
         iTag.style.transform = "rotate(270deg)";
+        roadBox.classList.remove('hidden-all')
         this.iconTag = false
       } else {
         iTag.style.transform = "rotate(90deg)";
+        roadBox.classList.add('hidden-all')
         this.iconTag = true
       }
 
     }
   },
   mounted() {
+    // 设置定时器 等待酒店信息全部获取后执行，遍历酒店信息获取酒店location
 
     // 页面加载之后执行
-    window.onLoad = function () {
-      // 生成地图hotelMap是显示地图的div的id
-      var map = new AMap.Map('hotelMap', {
-        zoom: 11,//放大级别
-        center: [118.8718107, 31.32846821],//中心点坐标，经纬度
-        viewMode: '3D'//使用3D视图
-      });
-
-      // 创建一个 Marker 实例：
-      var marker = new AMap.Marker({
-        //content: "<div style='width:20px; height:20px; background:red;'>1</div>",
-        position: new AMap.LngLat(118.8718107, 31.32846821),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-        title: '北京'
-      });
-
-      map.add(marker);
-    }
+    window.onLoad = this.init
 
     // 地图的链接
     var key = "	9b7c3f319b857206392cb57315b87209"
@@ -231,5 +258,9 @@ export default {
     transform: rotate(90deg);
     color: #f90;
   }
+}
+.hidden-all {
+  max-height: 3em;
+  overflow: hidden;
 }
 </style>
