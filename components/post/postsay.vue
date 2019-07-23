@@ -33,109 +33,101 @@
           v-model="sayTextArea"
         ></el-input>
         <el-button type="primary" @click="createSay(sayTextArea)" plain>提交</el-button>
-        <!-- <div @click="createSay">提交</div> -->
         <!-- 图片上传 -->
-        <!-- 'POST', 'http://127.0.0.1:1337/upload' -->
         <el-upload
-          class="avatar-uploader "
-          action="#"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          ref="pics"
-          :model="pics"
+          action="http://127.0.0.1:1337/upload"
+          list-type="picture-card"
+          :on-success="handleSuccess"
+          name="files"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i class="el-icon-plus"></i>
         </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt />
+        </el-dialog>
       </div>
       <!-- 评论显示区 -->
       <el-card class="box-card">
         <div ref="dislist" v-for="(item,index) in dislist" :key="index" class="text item">
           {{item.content }}
           <div v-if="item.follow">{{item.follow.content}}</div>
-          <div v-if="true" style="width:100px;height:100px;border:1px solid red"><img :src="item.pics[0]" alt=""/></div>
+          <div>
+            <img style=" width:100px;height:100px;" v-if="item.pics[0]" :src="`${$axios.defaults.baseURL}${item.pics[0].url}`" alt />
+          </div>
         </div>
+        <!-- 分页器 -->
+   
       </el-card>
     </div>
   </div>
 </template>
 <script>
-// import { log } from 'util';
-// import { log } from 'util';
 export default {
   data() {
     return {
       sayTextArea: "",
       imageUrl: "",
-      dislist:[],
-      follow:{ },
-      pics:[],
-      newSay:"",
+      dislist: [],
+      follow: {},
+      pics: [],
+      newSay: "",
+      dialogImageUrl: "",
+      dialogVisible: false
     };
   },
- mounted(){
-   //渲染旅游攻略评论
- this.getSay()
+  mounted() {
+    //渲染旅游攻略评论
+    this.getSay();
+  },
+  methods: {
+    handleSuccess(response, file, fileList) {
+      console.log(response, file, fileList);
+      this.pics.push(response[0]);
     },
-    methods: {
-        getSay(){
-        this.$axios({
-        url:"/posts/comments",
-        method:"GET",
-      }).then(res=>{
-        console.log(res.data.data[0].pics,2233); //评论照片地址[]
+    getSay() {
+      this.$axios({
+        url: "/posts/comments",
+        method: "GET"
+      }).then(res => {
+        console.log(res.data.data[0].pics, 2233); //评论照片地址[]
         // console.log(res.data.data[0].content) 评论
-      // console.log(res.data.data[0].follow.content) 回复
-      this.dislist=res.data.data;
-     
-      })
-        },
-        //新增旅游攻略评论
-        createSay(sayTextArea){
-          console.log(sayTextArea);
-            // 数据的拼接
-            const data = {
-              content:sayTextArea,
-                score: this.score,
-                loacation: this.loacation,
-                pics: this.pics,
-                post: 4,
-            }
-     this.$axios({
-        url:"/comments",
-        method:"POST",
+        // console.log(res.data.data[0].follow.content) 回复
+        this.dislist = res.data.data;
+      });
+    },
+    //新增旅游攻略评论
+    createSay(sayTextArea) {
+      console.log(sayTextArea);
+      // 数据的拼接
+      const data = {
+        content: sayTextArea,
+        score: this.score,
+        loacation: this.loacation,
+        pics: this.pics,
+        post: 4
+      };
+      this.$axios({
+        url: "/comments",
+        method: "POST",
         data,
         //  添加授权的头信息
         headers: {
-                    // "Content-Type":"",
-                    // 下面请求头信息不是通用的，针对当前的项目的（基于JWT token标准）
-                    Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
-                }
-      }).then(res=>{
+          // "Content-Type":"",
+          // 下面请求头信息不是通用的，针对当前的项目的（基于JWT token标准）
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        }
+      }).then(res => {
+        console.log(res, 123);
+        console.log(res.config.data);
+        this.getSay();
+      });
 
-        console.log(res,123); 
-        console.log(res.config.data); 
-         this.getSay()
-       
-      })
-        sayTextArea=""
-      },
-      //上传图片
-      handleAvatarSuccess(res, file){
-        
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.pics=this.imageUrl
-      //  console.log(66666666,this.pics);
-      const data={
-        pics:this.pics
-      }
-
-      },
+      // sayTextArea = "";
     }
+  }
 };
 </script>
 <style lang="less" scoped>
-
 .mian {
   padding-top: 30px;
   margin: 0 auto;

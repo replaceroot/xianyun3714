@@ -1,12 +1,26 @@
 <template>
-  <div>
+    <div class="div">
+        <div v-for="(item, index) in  data" :key="index">
+            {{ item.title }}
 
-  </div>
+            <!-- 自己调用自己 -->
+            <NavsItem :data="item.children" />
+        </div>
+    </div>
 </template>
 
 <script>
-export default {};
+export default {
+    // 1.先命名name, 在当前组件内可以通过name自己调用自己
+    name: "NavsItem",
+    props: ["data"]
+}
 </script>
 
-<style>
+<style scoped>
+    .div  div{
+        margin-left:20px;
+    }
 </style>
+
+

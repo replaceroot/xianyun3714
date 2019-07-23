@@ -5,7 +5,8 @@
     <!-- 正文 -->
      <PostDetail :data="$store.state.post.postlist"/>
      <!--评论模块 -->
-       <PostSay/>    
+       <PostSay/>  
+   
     </div>
     <div class="right">
        <!-- 侧边栏 -->
