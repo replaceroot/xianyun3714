@@ -128,7 +128,9 @@ export default {
   data() {
     return {
       iconTag: true,  // 点击标签扩展
-      hotelLocation: {}    // 酒店位置信息
+      hotelLocation: {},    // 酒店位置信息
+      lonFirst: 118.8718107,    // 中心点的经度(默认南京)
+      latFirst: 31.32846821,    // 中心点的纬度(默认南京)
     }
   },
   computed: {
@@ -142,20 +144,39 @@ export default {
     },
     // 获取城市酒店的信息
     CityhotelInfo() {
+      // 默认第一个酒店的经纬度为中心点
+      // this.lonFirst = this.$store.state.hotel.hotelInfo[0].location.longitude
+      // this.latFirst = this.$store.state.hotel.hotelInfo[0].location.latitude
+      // 调用创建点位图
       return this.$store.state.hotel.hotelInfo
+    },
+  },
+  watch: {
+    '$store.state.hotel.hotelInfo'(nv) {
+      try {
+        if (AMap) {
+          this.init()
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
-
   },
   methods: {
     init() {
+      // console.log(111);
+
+      // console.log(this.lonFirst, this.latFirst);
+
+      // this.$nextTick(_ => {
+
       // 生成地图hotelMap是显示地图的div的id
       var map = new AMap.Map('hotelMap', {
         zoom: 8,//放大级别
-        center: [118.8718107, 31.32846821],//中心点坐标，经纬度
+        center: [this.CityhotelInfo[0].location.longitude, this.CityhotelInfo[0].location.latitude],//中心点坐标，经纬度
         viewMode: '3D'//使用3D视图
       });
-      console.log(this.CityhotelInfo);
-
+      console.log(this.CityhotelInfo, "当前酒店点位图");
       // 创建一个 Marker 实例：
       this.CityhotelInfo.forEach((v, index) => {
         map.add(new AMap.Marker({
@@ -167,11 +188,12 @@ export default {
            background-size: 22px 36px;
            text-align: center;
            line-height: 24px;
-           color: #fff;'>${index}</div>`,
+           color: #fff;'>${index + 1}</div>`,
           position: new AMap.LngLat(v.location.longitude, v.location.latitude),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-          title:`${v.name}`
+          title: `${v.name}`
         }));
       })
+      // })
     },
     // 点击扩展区域
     handleExtation() {
@@ -192,11 +214,9 @@ export default {
     }
   },
   mounted() {
-    // 设置定时器 等待酒店信息全部获取后执行，遍历酒店信息获取酒店location
 
     // 页面加载之后执行
     window.onLoad = this.init
-
     // 地图的链接
     var key = "	9b7c3f319b857206392cb57315b87209"
     var url = `https://webapi.amap.com/maps?v=1.4.15&key=${key}&callback=onLoad`;
