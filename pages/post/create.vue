@@ -239,6 +239,9 @@ export default {
                 time: this.time
             });
             this.total = this.drafts.length;
+             this.form.input="",
+            this.$refs.vueEditor.editor.root.innerHTML="",
+            this.form.departCity=""
             // console.log(this.total);
 
             // 限制的条数
@@ -247,6 +250,7 @@ export default {
             }
             // 本地存储
             localStorage.setItem("post-caogao", JSON.stringify(this.drafts));
+           
         },
         
  
