@@ -25,34 +25,83 @@
       <!--评论模块 -->
       <div class="say">
         <h4>评论</h4>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
-        <!-- 图片上传 -->
-        <el-upload
-          class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-        >
-          <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar" /> -->
-          <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
-        </el-upload>
-
+        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="sayTextArea" @change="createSay"></el-input>
+        <el-button type="primary"  plain>提交</el-button>
+     <!-- <div @click="createSay">提交</div> -->
+   <!-- 图片上传 -->
+  <el-upload
+  class="avatar-uploader"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload">
+  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+</el-upload>
+      </div>
       <!-- 评论显示区 -->
       <el-card class="box-card">
-     <div v-for="o in 4" :key="o" class="text item">
-    {{'列表内容 ' + o }}
+     <div v-for="(item,index) in dislist" :key="index" class="text item">
+    {{item.content }}
+    <div v-if="item.follow">{{item.follow.content}}</div>
   </div>
 </el-card>
       </div>
     </div>
-  </div>
 </template>
 <script>
+import { log } from 'util';
 export default {
   data() {
     return {
-      textarea: ""
+      sayTextArea: "",
+      imageUrl: "",
+      dislist:[],
+      follow:{ },
+      pics:[],
+      newSay:"",
     };
-  }
+  },
+    mounted(){
+      this.$axios({
+        url:"/posts/comments",
+        method:"GET"
+      }).then(res=>{
+        // console.log(res.data.data); 
+        // console.log(res.data.data[0].pics); 评论照片地址[]
+        // console.log(res.data.data[0].content) 评论
+      // console.log(res.data.data[0].follow.content) 回复
+      this.dislist=res.data.data 
+  
+      })
+    },
+    methods: {
+      createSay(dislist){
+        console.log(111);
+        console.log(dislist);
+       const newSay= this.sayTextArea
+        // console.log(newSay);
+        // dislist.push(newSay)
+        
+
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        // console.log(this);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      }
+    }
 };
 </script>
 <style lang="less" scoped>

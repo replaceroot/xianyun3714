@@ -22,7 +22,7 @@
     <el-row>
       <!-- 酒店列表信息 -->
       <el-row>
-        <HotelList/>
+        <HotelList />
       </el-row>
     </el-row>
   </section>
