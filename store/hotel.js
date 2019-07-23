@@ -1,25 +1,31 @@
-export const state = ()=>{
+export const state = () => {
     return {
         // 酒店的信息
-        hotelInfo:[],
+        hotelInfo: [],
         // 城市区域信息
-        cityArea:{},
+        cityArea: {},
         // 城市区域数量
-        cityAreaNum:'',
+        cityAreaNum: '',
+        // 过滤后的酒店信息
+        afterFilter:[],
     }
 }
 
 export const mutations = {
     // 设置酒店的信息
-    setHotelInfo(state,data){
+    setHotelInfo(state, data) {
         state.hotelInfo = data;
     },
     // 设置城市区域信息
-    setCityArea(state,data){
+    setCityArea(state, data) {
         state.cityArea = data
     },
     // 设置城市区域数量
-    setCityAreaNum(state,data){
+    setCityAreaNum(state, data) {
         state.cityAreaNum = data
+    },
+    // 设置过滤后的酒店信息
+    setAfterFilter(state,data){
+        state.afterFilter = data
     }
 }

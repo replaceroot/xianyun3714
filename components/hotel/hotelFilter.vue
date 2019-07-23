@@ -30,9 +30,8 @@
         <el-row>
           <el-select
             v-model="hotellevel"
-            multiple
-            collapse-tags
             placeholder="不限"
+            @change="handleLevel"
           >
             <el-option
               v-for="(item,index) in hotelLevelList"
@@ -112,25 +111,9 @@ export default {
   data() {
     return {
       selectHotelPrice: 4000,  // 选择酒店的价格    
-      priceRange : 100,
+      priceRange: 100,
       hotellevel: [],     // 酒店等级
       hotelLevelList: [     // 下拉框 酒店等级
-        {
-          value: '1',
-          label: '1星'
-        }, {
-          value: '2',
-          label: '2星'
-        }, {
-          value: '3',
-          label: '3星'
-        }, {
-          value: '4',
-          label: '4星'
-        }, {
-          value: '5',
-          label: '5星'
-        }
       ],
       hoteltype: [],        // 酒店类型
       hotelTypeList: [      // 下拉框 酒店类型      
@@ -143,15 +126,41 @@ export default {
       ]
     }
   },
+  computed: {
+    // 获取store中酒店的信息
+    getHotelList() {
+      return this.$store.state.hotel.hotelInfo
+    },
+  },
   methods: {
     // 拖动滑块触发
     priceTooltip(val) {
       //   console.log(val);
       this.selectHotelPrice = val / 100 * 4000
       return val / 100 * 4000
-     
-      console.log(this.selectHotelPrice);
+
+      // console.log(this.selectHotelPrice);
+    },
+    // 点击住宿等级
+    handleLevel(v) {
+      // console.log(v);
+      // console.log(this.getHotelList);
+      const newHotelList = JSON.parse(JSON.stringify(this.getHotelList))
+      // console.log(JSON.parse(JSON.stringify(this.getHotelList)));
+
+      // console.log(this.hotelLevelList);
+
+      // 过滤满足条件的酒店数据
+      let newHotelAry = newHotelList.filter(item => {
+        return item.hotellevel && (item.hotellevel.level === v)
+        // console.log(item);     
+      })
+      console.log(newHotelAry);
+      // 将过滤后的数据存储到store
+      this.$store.commit("hotel/setAfterFilter", newHotelAry)
+
     }
+
   },
   mounted() {
     this.$axios({
