@@ -6,6 +6,8 @@ export const state = () => {
         cityArea: {},
         // 城市区域数量
         cityAreaNum: '',
+        // 过滤后的酒店信息
+        afterFilter:[],
     }
 }
 
@@ -21,5 +23,9 @@ export const mutations = {
     // 设置城市区域数量
     setCityAreaNum(state, data) {
         state.cityAreaNum = data
+    },
+    // 设置过滤后的酒店信息
+    setAfterFilter(state,data){
+        state.afterFilter = data
     }
 }

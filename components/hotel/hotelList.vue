@@ -78,7 +78,7 @@
             </el-table-column>
             <el-table-column>
               <template slot-scope="scope">
-               <nuxt-link to="javascript:"> <span> ￥ {{ scope.row.price}} 起 ></span></nuxt-link>
+                <nuxt-link to="javascript:"> <span> ￥ {{ scope.row.price}} 起 ></span></nuxt-link>
               </template>
             </el-table-column>
           </el-table>
@@ -92,14 +92,22 @@ export default {
   data() {
     return {
       grade: 0,    // 评分
-      travelNotes:Math.floor(Math.random()*100) // 游记数量
+      travelNotes: Math.floor(Math.random() * 100) // 游记数量
     }
   },
   computed: {
     data() {
+      // return this.$store.state.hotel.afterFilter ? this.$store.state.hotel.hotelInfo:this.$store.state.hotel.afterFilter 
       return this.$store.state.hotel.hotelInfo
-    }
+    },
+    // 默认所有的酒店信息
+    // defaultHotel() {
+    //   return this.$store.state.hotel.hotelInfo
+    // }
   },
+  // mounted() {
+  //   this.data = this.defaultHotel
+  // }
 }
 </script>
 <style lang="less" scoped>

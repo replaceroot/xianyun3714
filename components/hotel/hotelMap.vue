@@ -176,7 +176,7 @@ export default {
         center: [this.CityhotelInfo[0].location.longitude, this.CityhotelInfo[0].location.latitude],//中心点坐标，经纬度
         viewMode: '3D'//使用3D视图
       });
-      console.log(this.CityhotelInfo, "当前酒店点位图");
+      // console.log(this.CityhotelInfo, "当前酒店点位图");
       // 创建一个 Marker 实例：
       this.CityhotelInfo.forEach((v, index) => {
         map.add(new AMap.Marker({
